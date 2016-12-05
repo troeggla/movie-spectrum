@@ -82,17 +82,17 @@ def main():
     X = np.vstack((credits_X, content_X))
     y = np.vstack((credits_y, content_y)).ravel()
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    model = RandomForestClassifier()
 
-    print "training model..."
+    if len(sys.argv) >= 2 and "--cv" in sys.argv:
+        print "training model with cross-validation..."
+        crossvalidate(model, X, y)
+    else:
+        print "training model..."
+        train_and_dump_model(model, X, y)
 
-    model = svm.SVC()
-    model.fit(X_train, y_train)
-
-    print "score:", model.score(X_test, y_test)
-    print "dumping model..."
-
-    dump(model, open("model.p", "wb"))
+    print "DONE"
+    print "took", time() - start, "sec"
 
 
 if __name__ == "__main__":
