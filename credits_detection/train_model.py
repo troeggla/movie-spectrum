@@ -60,7 +60,7 @@ def train_and_dump_model(model, X, y):
     dump(model, open("model.p", "wb"))
 
 
-def main():
+def main(cross_validate=False):
     start = time()
     print "loading data..."
 
@@ -77,7 +77,7 @@ def main():
 
     model = RandomForestClassifier()
 
-    if len(sys.argv) >= 2 and "--cv" in sys.argv:
+    if cross_validate:
         print "training model with cross-validation..."
         crossvalidate(model, X, y)
     else:
