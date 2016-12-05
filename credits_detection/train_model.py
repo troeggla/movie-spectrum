@@ -9,6 +9,13 @@ from sklearn.model_selection import train_test_split, cross_val_score, KFold
 from time import time
 
 
+def process_frame(frame):
+    frame = cv2.resize(frame, (100, frame.shape[0]))
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    return np.mean(frame, axis=0)
+
+
 def get_frames_from_file(infile):
     cap = cv2.VideoCapture(infile)
 
@@ -18,15 +25,7 @@ def get_frames_from_file(infile):
         if frame is None:
             break
 
-        frame = cv2.resize(frame, (100, frame.shape[0]))
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        mean_colors = []
-
-        for i in xrange(frame.shape[1]):
-            mean_colors.append(np.mean(frame[:, i]))
-
-        yield mean_colors
+        yield process_frame(frame)
 
     cap.release()
 
