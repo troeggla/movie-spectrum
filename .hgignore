@@ -4,3 +4,5 @@ syntax: glob
 *.pyc
 
 .DS_Store
+credits_detection/content/
+credits_detection/credits/
