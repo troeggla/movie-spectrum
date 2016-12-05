@@ -74,10 +74,15 @@ def main(infile):
         if frame is None:
             break
 
+        frames_processed += 1
+
+        if is_credit(frame):
+            frames_dropped += 1
+            continue
+
         frame_average = mean_color(frame)
         frame_averages.append(frame_average)
 
-        frames_processed += 1
         if frames_processed % 1000 == 0:
             print "Processed", frames_processed, "frames", frame_average
             print "Dropped", frames_dropped, "frames"
