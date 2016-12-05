@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import sys
 
+from glob import glob
 from pickle import dump
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, KFold
@@ -64,19 +65,12 @@ def main():
     start = time()
     print "loading data..."
 
-    credits_X, credits_y = get_dataset(
-        ["credits/mad_max.mov", "credits/under_the_skin.mov"],
-        1
-    )
-
+    credits_X, credits_y = get_dataset(glob("./credits/*.mov"), 1)
     print "credits done:", credits_X.shape, credits_y.shape
 
-    content_X, content_y = get_dataset(
-        ["content/mad_max.mov", "content/under_the_skin.mov"],
-        0
-    )
-
+    content_X, content_y = get_dataset(glob("./content/*.mov"), 0)
     print "content done:", content_X.shape, content_y.shape
+
     print "took", time() - start, "sec"
 
     X = np.vstack((credits_X, content_X))
