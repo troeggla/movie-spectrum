@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import sys
+
 from collections import namedtuple
 from math import sin, pi
 
@@ -18,30 +19,29 @@ def gradient(img, length=0.25):
     grad_function = np.vectorize(grad_function)
 
     vec = grad_function(np.arange(0, rows)).reshape(-1, 1)
-    rev_vec = vec[::-1]
+    gradient = vec * vec[::-1]
 
     for j in xrange(cols):
-        output[:, j] = output[:, j] * vec
-        output[:, j] = output[:, j] * rev_vec
+        output[:, j] = output[:, j] * gradient
 
     return output
 
 
 def mean_color(frame):
-    red_pixels = frame[:, :, 0]
+    red_pixels = frame[:, :, 2]
     green_pixels = frame[:, :, 1]
-    blue_pixels = frame[:, :, 2]
+    blue_pixels = frame[:, :, 0]
 
     return Color(
-        int(round(np.mean(red_pixels))),
-        int(round(np.mean(green_pixels))),
-        int(round(np.mean(blue_pixels)))
+        red=int(round(np.mean(red_pixels))),
+        green=int(round(np.mean(green_pixels))),
+        blue=int(round(np.mean(blue_pixels)))
     )
 
 
 def main(infile):
     cap = cv2.VideoCapture(infile)
-    frames_processed = 0
+    frames_processed, frames_dropped = 0, 0
     frame_averages = []
 
     while cap.isOpened():
@@ -56,6 +56,7 @@ def main(infile):
         frames_processed += 1
         if frames_processed % 1000 == 0:
             print "Processed", frames_processed, "frames", frame_average
+            print "Dropped", frames_dropped, "frames"
 
     cap.release()
 
@@ -68,13 +69,15 @@ def main(infile):
     )
 
     for i, frame_color in enumerate(frame_averages):
-        outimg[:, i, 0] = frame_color.red
+        outimg[:, i, 0] = frame_color.blue
         outimg[:, i, 1] = frame_color.green
-        outimg[:, i, 2] = frame_color.blue
+        outimg[:, i, 2] = frame_color.red
 
     outimg = cv2.resize(outimg, (width, height))
+    with_gradient = gradient(outimg, 0.4)
+
     cv2.imwrite("spectrum.png", outimg)
-    cv2.imwrite("spectrum_vignette.png", gradient(outimg, 0.4))
+    cv2.imwrite("spectrum_vignette.png", with_gradient)
 
     cv2.destroyAllWindows()
 
