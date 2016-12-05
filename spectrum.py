@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import sys
 
+from argparse import ArgumentParser
 from collections import namedtuple
 from math import sin, pi
 from pickle import load
@@ -101,8 +102,22 @@ def main(infile, remove_credits=True):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print "USAGE:", sys.argv[0], "[video_file]"
-        sys.exit(1)
+    parser = ArgumentParser(
+        description="""Generate a colour spectrum image from a video file by
+        taking the average colour of each frame an adding it as a stripe of
+        that coulour to the output image."""
+    )
 
-    main(sys.argv[1])
+    parser.add_argument(
+        "-r", "--remove_credits",
+        action="store_true", default=False,
+        help="Remove credits from generated image"
+    )
+
+    parser.add_argument(
+        "video_file", type=str,
+        help="The video file to process"
+    )
+
+    args = parser.parse_args()
+    main(args.video_file, remove_credits=args.remove_credits)
