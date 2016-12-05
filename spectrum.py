@@ -5,7 +5,6 @@ import sys
 from collections import namedtuple
 from math import sin, pi
 from pickle import load
-from sklearn import svm
 
 from credits_detection.train_model import process_frame
 
