@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import sys
 
+from argparse import ArgumentParser
 from glob import glob
 from pickle import dump
 from sklearn.ensemble import RandomForestClassifier
@@ -89,4 +90,21 @@ def main(cross_validate=False):
 
 
 if __name__ == "__main__":
-    main()
+    parser = ArgumentParser(
+        description="""Train a machine learning classifier to detect credit
+        sequences in video files and dump the generated model to file. If
+        cross-validation is activated, no model will be dumped.
+
+        The training data needs to be stored as MOV files in the folders
+        credits/ and content/ respectively.
+        """
+    )
+
+    parser.add_argument(
+        "--cv",
+        action="store_true", default=False,
+        help="Perform cross-validation and do not dump model"
+    )
+
+    args = parser.parse_args()
+    main(cross_validate=args.cv)
