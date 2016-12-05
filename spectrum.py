@@ -7,24 +7,14 @@ from math import sin, pi
 from pickle import load
 from sklearn import svm
 
+from credits_detection.train_model import process_frame
+
 Color = namedtuple("Color", ["red", "green", "blue"])
 model = load(open("credits_detection/model.p", "r"))
 
 
-def process_frame_for_prediction(frame):
-    frame = cv2.resize(frame, (100, frame.shape[0]))
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    mean_colors = []
-
-    for i in xrange(frame.shape[1]):
-        mean_colors.append(np.mean(frame[:, i]))
-
-    return mean_colors
-
-
 def is_credit(frame):
-    frame = process_frame_for_prediction(frame)
+    frame = process_frame(frame)
 
     if model.predict([frame]) == [[1]]:
         return True
