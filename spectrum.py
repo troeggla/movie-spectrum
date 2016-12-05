@@ -52,7 +52,7 @@ def mean_color(frame):
     )
 
 
-def main(infile):
+def main(infile, remove_credits=True):
     cap = cv2.VideoCapture(infile)
     frames_processed, frames_dropped = 0, 0
     frame_averages = []
@@ -65,7 +65,7 @@ def main(infile):
 
         frames_processed += 1
 
-        if is_credit(frame):
+        if remove_credits and is_credit(frame):
             frames_dropped += 1
             continue
 
