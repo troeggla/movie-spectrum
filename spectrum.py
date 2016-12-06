@@ -75,7 +75,9 @@ def main(infile, remove_credits=True):
 
         if frames_processed % 1000 == 0:
             print "Processed", frames_processed, "frames", frame_average
-            print "Dropped", frames_dropped, "frames"
+
+            if remove_credits:
+                print "Dropped", frames_dropped, "frames"
 
     cap.release()
 
@@ -109,7 +111,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "-r", "--remove_credits",
+        "-r", "--remove-credits",
         action="store_true", default=False,
         help="Remove credits from generated image"
     )
