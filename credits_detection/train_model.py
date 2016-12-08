@@ -13,6 +13,7 @@ from time import time
 def process_frame(frame):
     frame = cv2.resize(frame, (100, frame.shape[0]))
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frame = cv2.GaussianBlur(frame, (9, 9), 0)
 
     col_mean = np.mean(frame, axis=0)
     col_mean = col_mean - np.min(col_mean)
