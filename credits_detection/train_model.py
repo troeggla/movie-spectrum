@@ -31,7 +31,7 @@ def get_frames_from_file(infile):
     cap.release()
 
 
-def get_dataset(files, target):
+def get_dataset(files, target, subsample=None):
     X = []
 
     for f in files:
@@ -40,6 +40,11 @@ def get_dataset(files, target):
 
     X = np.array(X)
     rows = X.shape[0]
+
+    if subsample:
+        indices = np.random.choice(rows, subsample)
+        rows = subsample
+        X = X[indices]
 
     return X, np.full((rows, 1), target, dtype=int)
 
