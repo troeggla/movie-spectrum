@@ -96,8 +96,12 @@ def main(infile, remove_credits=True):
     outimg = cv2.resize(outimg, (width, height))
     with_gradient = gradient(outimg, 0.4)
 
-    cv2.imwrite("spectrum.png", outimg)
-    cv2.imwrite("spectrum_vignette.png", with_gradient)
+    cv2.imwrite("spectrum.png", outimg, (cv2.cv.CV_IMWRITE_PNG_COMPRESSION, 9))
+    cv2.imwrite(
+        "spectrum_vignette.png",
+        with_gradient,
+        (cv2.cv.CV_IMWRITE_PNG_COMPRESSION, 9)
+    )
 
     cv2.destroyAllWindows()
 
