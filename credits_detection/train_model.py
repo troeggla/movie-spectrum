@@ -70,10 +70,10 @@ def main(cross_validate=False):
     start = time()
     print "loading data..."
 
-    credits_X, credits_y = get_dataset(glob("./credits/*.mov"), 1)
+    credits_X, credits_y = get_dataset(glob("./credits/*.mov"), 1, 5000)
     print "credits done:", credits_X.shape, credits_y.shape
 
-    content_X, content_y = get_dataset(glob("./content/*.mov"), 0)
+    content_X, content_y = get_dataset(glob("./content/*.mov"), 0, 5000)
     print "content done:", content_X.shape, content_y.shape
 
     print "took", time() - start, "sec"
