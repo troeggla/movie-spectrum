@@ -72,15 +72,24 @@ def train_and_dump_model(model, X, y):
     print "dumping model..."
     dump(model, open("model.p", "wb"))
 
+    print "testing on unseen data..."
+    credits_X, credits_y = get_dataset(["credits/john_wick.mov"], 1)
+    print "data loaded:", credits_X.shape, credits_y.shape
+
+    print "score:", model.score(credits_X, credits_y)
+
 
 def main(cross_validate=False):
     start = time()
     print "loading data..."
 
-    credits_X, credits_y = get_dataset(glob("./credits/*.mov"), 1, 5000)
+    credits_X, credits_y = get_dataset([
+        "credits/mad_max.mov",
+        "credits/under_the_skin.mov"
+    ], 1, 10000)
     print "credits done:", credits_X.shape, credits_y.shape
 
-    content_X, content_y = get_dataset(glob("./content/*.mov"), 0, 5000)
+    content_X, content_y = get_dataset(glob("./content/*.mov"), 0, 10000)
     print "content done:", content_X.shape, content_y.shape
 
     print "took", time() - start, "sec"
