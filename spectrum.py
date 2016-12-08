@@ -102,6 +102,17 @@ def main(infile, remove_credits=True):
 
     cv2.destroyAllWindows()
 
+    print "\nDONE\n"
+
+    if remove_credits:
+        print "Processed %d frames, dropped %d (%.2f%%)" % (
+            frames_processed,
+            frames_dropped,
+            frames_dropped / float(frames_processed) * 100
+        )
+    else:
+        print "Processed %d frames" % (frames_processed)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser(
