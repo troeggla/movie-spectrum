@@ -14,7 +14,13 @@ def process_frame(frame):
     frame = cv2.resize(frame, (100, frame.shape[0]))
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    return np.mean(frame, axis=0)
+    col_mean = np.mean(frame, axis=0)
+    col_mean = col_mean - np.min(col_mean)
+
+    if np.max(col_mean) > 0:
+        col_mean = col_mean / np.max(col_mean)
+
+    return col_mean
 
 
 def get_frames_from_file(infile):
