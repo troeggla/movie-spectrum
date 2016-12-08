@@ -68,10 +68,9 @@ def main(infile, remove_credits=True):
 
         if remove_credits and is_credit(frame):
             frames_dropped += 1
-            continue
-
-        frame_average = mean_color(frame)
-        frame_averages.append(frame_average)
+        else:
+            frame_average = mean_color(frame)
+            frame_averages.append(frame_average)
 
         if frames_processed % 1000 == 0:
             print "Processed", frames_processed, "frames", frame_average
