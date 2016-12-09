@@ -52,7 +52,7 @@ def mean_color(frame):
     )
 
 
-def main(infile, remove_credits=True):
+def main(infile, dimensions=(8000, 2000), remove_credits=True):
     cap = cv2.VideoCapture(infile)
     frames_processed, frames_dropped = 0, 0
     frame_averages = []
@@ -79,9 +79,7 @@ def main(infile, remove_credits=True):
 
     cap.release()
 
-    height = 2000
-    width = 8000
-
+    width, height = dimensions
     outimg = np.zeros(
         (height, len(frame_averages), 3),
         np.uint8
