@@ -127,6 +127,20 @@ if __name__ == "__main__":
         help="Remove credits from generated image"
     )
 
+    def dimensions(dim):
+        dim = dim.split("x")[:2]
+
+        if len(dim) != 2:
+            raise ValueError()
+
+        return tuple(map(int, dim))
+
+    parser.add_argument(
+        "-d", "--dimensions",
+        default="8000x2000", type=dimensions,
+        help="Generate an image with custom dimensions (default 8000x2000)"
+    )
+
     parser.add_argument(
         "video_file", type=str,
         help="The video file to process"
