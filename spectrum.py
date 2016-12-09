@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import sys
 
 from argparse import ArgumentParser
 from collections import namedtuple
