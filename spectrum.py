@@ -147,4 +147,9 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    main(args.video_file, remove_credits=args.remove_credits)
+
+    main(
+        args.video_file,
+        dimensions=args.dimensions,
+        remove_credits=args.remove_credits
+    )
