@@ -8,7 +8,7 @@ from pickle import load
 
 from credits_detection.train_model import process_frame
 
-Color = namedtuple("Color", ["red", "green", "blue"])
+Color = namedtuple("Color", ["blue", "green", "red"])
 model = load(open("credits_detection/model.p", "r"))
 
 
