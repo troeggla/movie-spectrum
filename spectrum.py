@@ -52,10 +52,8 @@ def mean_color(frame):
     )
 
 
-def main(infile, dimensions=(8000, 2000), remove_credits=True):
+def get_frames(infile):
     cap = cv2.VideoCapture(infile)
-    frames_processed, frames_dropped = 0, 0
-    frame_averages = []
 
     while cap.isOpened():
         _, frame = cap.read()
@@ -63,44 +61,51 @@ def main(infile, dimensions=(8000, 2000), remove_credits=True):
         if frame is None:
             break
 
+        yield frame
+
+    cap.release()
+
+
+def write_to_files(frame_averages, dimensions, outname="spectrum"):
+    width, height = dimensions
+
+    frame_averages = np.array(frame_averages, dtype=np.uint8)
+    outimg = np.tile(frame_averages, (height, 1, 1))
+
+    outimg = cv2.resize(outimg, (width, height))
+    cv2.imwrite(
+        outname + ".png",
+        outimg,
+        (cv2.cv.CV_IMWRITE_PNG_COMPRESSION, 9)
+    )
+
+    with_gradient = gradient(outimg, 0.4)
+    cv2.imwrite(
+        outname + "_vignette.png",
+        with_gradient,
+        (cv2.cv.CV_IMWRITE_PNG_COMPRESSION, 9)
+    )
+
+
+def main(infile, dimensions=(8000, 2000), remove_credits=True):
+    frames_processed, frames_dropped = 0, 0
+    frame_averages = []
+
+    for frame in get_frames(infile):
         frames_processed += 1
 
         if remove_credits and is_credit(frame):
             frames_dropped += 1
         else:
-            frame_average = mean_color(frame)
-            frame_averages.append(frame_average)
+            frame_averages.append(mean_color(frame))
 
         if frames_processed % 1000 == 0:
-            print "Processed", frames_processed, "frames", frame_average
+            print "Processed", frames_processed, "frames"
 
             if remove_credits:
                 print "Dropped", frames_dropped, "frames"
 
-    cap.release()
-
-    width, height = dimensions
-    outimg = np.zeros(
-        (height, len(frame_averages), 3),
-        np.uint8
-    )
-
-    for i, frame_color in enumerate(frame_averages):
-        outimg[:, i, 0] = frame_color.blue
-        outimg[:, i, 1] = frame_color.green
-        outimg[:, i, 2] = frame_color.red
-
-    outimg = cv2.resize(outimg, (width, height))
-    with_gradient = gradient(outimg, 0.4)
-
-    cv2.imwrite("spectrum.png", outimg, (cv2.cv.CV_IMWRITE_PNG_COMPRESSION, 9))
-    cv2.imwrite(
-        "spectrum_vignette.png",
-        with_gradient,
-        (cv2.cv.CV_IMWRITE_PNG_COMPRESSION, 9)
-    )
-
-    cv2.destroyAllWindows()
+    write_to_files(frame_averages, dimensions)
 
     print "\nDONE\n"
 
