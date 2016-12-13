@@ -34,10 +34,7 @@ def gradient(img, length=0.25):
     vec = grad_function(np.arange(0, rows)).reshape(-1, 1)
     gradient = vec * vec[::-1]
 
-    for j in xrange(cols):
-        output[:, j] = output[:, j] * gradient
-
-    return output
+    return output * gradient[..., np.newaxis]
 
 
 def mean_color(frame):
