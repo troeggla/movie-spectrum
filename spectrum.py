@@ -38,14 +38,13 @@ def gradient(img, length=0.25):
 
 
 def mean_color(frame):
-    red_pixels = frame[:, :, 2]
-    green_pixels = frame[:, :, 1]
-    blue_pixels = frame[:, :, 0]
+    def int_mean(arr):
+        return int(round(np.mean(arr)))
 
     return Color(
-        red=int(round(np.mean(red_pixels))),
-        green=int(round(np.mean(green_pixels))),
-        blue=int(round(np.mean(blue_pixels)))
+        int_mean(frame[:, :, 0]),
+        int_mean(frame[:, :, 1]),
+        int_mean(frame[:, :, 2])
     )
 
 
