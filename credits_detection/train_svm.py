@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import sys
 
 from argparse import ArgumentParser
 from glob import glob
@@ -8,6 +7,7 @@ from pickle import dump
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split, cross_val_score, KFold
 from time import time
+from util import get_dataset
 
 
 def process_frame(frame):
@@ -22,38 +22,6 @@ def process_frame(frame):
         col_mean = col_mean / np.max(col_mean)
 
     return col_mean
-
-
-def get_frames_from_file(infile):
-    cap = cv2.VideoCapture(infile)
-
-    while cap.isOpened():
-        _, frame = cap.read()
-
-        if frame is None:
-            break
-
-        yield process_frame(frame)
-
-    cap.release()
-
-
-def get_dataset(files, target, subsample=None):
-    X = []
-
-    for f in files:
-        for frame in get_frames_from_file(f):
-            X.append(frame)
-
-    X = np.array(X)
-    rows = X.shape[0]
-
-    if subsample:
-        indices = np.random.choice(rows, subsample)
-        rows = subsample
-        X = X[indices]
-
-    return X, np.full((rows, 1), target, dtype=int)
 
 
 def crossvalidate(model, X, y):
@@ -73,7 +41,10 @@ def train_and_dump_model(model, X, y):
     dump(model, open("models/svm.p", "wb"))
 
     print "testing on unseen data..."
-    credits_X, credits_y = get_dataset(["credits/john_wick.mov"], 1)
+    credits_X, credits_y = get_dataset(
+        ["credits/john_wick.mov"], 1,
+        process_frame
+    )
     print "data loaded:", credits_X.shape, credits_y.shape
 
     print "score:", model.score(credits_X, credits_y)
@@ -83,15 +54,17 @@ def main(cross_validate=False):
     start = time()
     print "loading data..."
 
-    credits_X, credits_y = get_dataset([
-        "credits/mad_max.mov",
-        "credits/under_the_skin.mov"
-    ], 1, 10000)
+    credits_X, credits_y = get_dataset(
+        ["credits/mad_max.mov", "credits/under_the_skin.mov"], 1,
+        process_frame, 10000
+    )
     print "credits done:", credits_X.shape, credits_y.shape
 
-    content_X, content_y = get_dataset(glob("./content/*.mov"), 0, 10000)
+    content_X, content_y = get_dataset(
+        glob("./content/*.mov"), 0,
+        process_frame, 10000
+    )
     print "content done:", content_X.shape, content_y.shape
-
     print "took", time() - start, "sec"
 
     X = np.vstack((credits_X, content_X))
