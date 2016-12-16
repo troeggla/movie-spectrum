@@ -124,8 +124,10 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "-r", "--remove-credits",
-        action="store_true", default=False,
-        help="Remove credits from generated image"
+        choices=["svm", "cnn"],
+        help="""Remove credits from generated image. This argument requires a
+        string parameter specifying the model to use. Either 'svm' or 'cnn' are
+        valid options."""
     )
 
     def dimensions(dim):
