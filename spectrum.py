@@ -8,17 +8,40 @@ from pickle import load
 
 from credits_detection.train_model import process_frame
 
+from credits_detection.train_cnn import process_frame as process_frame_cnn
+from credits_detection.train_cnn import build_model
+
 Color = namedtuple("Color", ["blue", "green", "red"])
-model = load(open("credits_detection/model.p", "r"))
 
 
-def is_credit(frame):
-    frame = process_frame(frame)
+def model_selector(modelname=None):
+    if modelname == "svm":
+        model = load(open("credits_detection/model.p", "r"))
 
-    if model.predict([frame]) == [[1]]:
-        return True
+        def is_credit(frame):
+            frame = process_frame(frame)
 
-    return False
+            if model.predict([frame]) == [[1]]:
+                return True
+
+            return False
+    elif modelname == "cnn":
+        cnn = build_model()
+        cnn.load_weights("credits_detection/cnn.h5")
+
+        def is_credit(frame):
+            frame = process_frame_cnn(frame)
+            frame = frame[np.newaxis, ...]
+
+            if cnn.predict(frame)[0][1] >= 0.9:
+                return True
+
+            return False
+    else:
+        def is_credit(frame):
+            return False
+
+    return is_credit
 
 
 def gradient(img, length=0.25):
