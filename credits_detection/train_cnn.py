@@ -90,7 +90,6 @@ def main():
         process_frame, 20000
     )
     print "content done:", content_X.shape, content_y.shape
-    print "processing frames..."
 
     X = np.vstack((credits_X, content_X))
     y = np.vstack((credits_y, content_y)).ravel()
