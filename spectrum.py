@@ -6,7 +6,7 @@ from collections import namedtuple
 from math import sin, pi
 from pickle import load
 
-from credits_detection.train_model import process_frame
+from credits_detection.train_svm import process_frame
 
 from credits_detection.train_cnn import process_frame as process_frame_cnn
 from credits_detection.train_cnn import build_model
