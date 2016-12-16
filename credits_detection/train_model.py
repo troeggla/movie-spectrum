@@ -70,7 +70,7 @@ def train_and_dump_model(model, X, y):
     print "score:", model.score(X_test, y_test)
 
     print "dumping model..."
-    dump(model, open("model.p", "wb"))
+    dump(model, open("models/svm.p", "wb"))
 
     print "testing on unseen data..."
     credits_X, credits_y = get_dataset(["credits/john_wick.mov"], 1)

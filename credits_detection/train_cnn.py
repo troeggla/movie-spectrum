@@ -14,7 +14,6 @@ from time import time
 def process_frame(frame):
     frame = cv2.resize(frame, (30, 30))
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    # frame = cv2.GaussianBlur(frame, (5, 5), 0)
 
     if np.max(frame) > 0:
         frame = frame / float(np.max(frame))
@@ -104,7 +103,7 @@ def train_and_dump_model(model, X, y):
     print "accuracy: {:.2f}%".format(accuracy * 100)
 
     print("dumping weights to file...")
-    model.save_weights("cnn.h5", overwrite=True)
+    model.save_weights("models/cnn.h5", overwrite=True)
 
 
 def main():

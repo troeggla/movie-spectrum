@@ -16,7 +16,7 @@ Color = namedtuple("Color", ["blue", "green", "red"])
 
 def model_selector(modelname=None):
     if modelname == "svm":
-        model = load(open("credits_detection/model.p", "r"))
+        model = load(open("credits_detection/models/svm.p", "r"))
 
         def is_credit(frame):
             frame = process_frame(frame)
@@ -27,7 +27,7 @@ def model_selector(modelname=None):
             return False
     elif modelname == "cnn":
         cnn = build_model()
-        cnn.load_weights("credits_detection/cnn.h5")
+        cnn.load_weights("credits_detection/models/cnn.h5")
 
         def is_credit(frame):
             frame = process_frame_cnn(frame)
