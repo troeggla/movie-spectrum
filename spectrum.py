@@ -172,5 +172,5 @@ if __name__ == "__main__":
     main(
         args.video_file,
         dimensions=args.dimensions,
-        remove_credits=args.remove_credits
+        credit_detector=model_selector(args.remove_credits)
     )
