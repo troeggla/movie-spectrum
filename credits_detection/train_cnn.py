@@ -9,6 +9,7 @@ from keras.optimizers import SGD
 from keras.utils import np_utils
 from sklearn.model_selection import train_test_split
 from time import time
+from util import get_dataset
 
 
 def process_frame(frame):
@@ -21,38 +22,6 @@ def process_frame(frame):
     frame = frame[..., np.newaxis]
 
     return frame
-
-
-def get_frames_from_file(infile):
-    cap = cv2.VideoCapture(infile)
-
-    while cap.isOpened():
-        _, frame = cap.read()
-
-        if frame is None:
-            break
-
-        yield process_frame(frame)
-
-    cap.release()
-
-
-def get_dataset(files, target, subsample=None):
-    X = []
-
-    for f in files:
-        for frame in get_frames_from_file(f):
-            X.append(frame)
-
-    X = np.array(X)
-    rows = X.shape[0]
-
-    if subsample:
-        indices = np.random.choice(rows, subsample)
-        rows = subsample
-        X = X[indices]
-
-    return X, np.full((rows, 1), target, dtype=int)
 
 
 def build_model():
@@ -110,25 +79,32 @@ def main():
     start = time()
     print "loading data..."
 
-    credits_X, credits_y = get_dataset([
-        "credits/mad_max.mov",
-        "credits/under_the_skin.mov"
-    ], 1, 20000)
+    credits_X, credits_y = get_dataset(
+        ["credits/mad_max.mov", "credits/under_the_skin.mov"], 1,
+        process_frame, 20000
+    )
     print "credits done:", credits_X.shape, credits_y.shape
 
-    content_X, content_y = get_dataset(glob("./content/*.mov"), 0, 20000)
+    content_X, content_y = get_dataset(
+        glob("./content/*.mov"), 0,
+        process_frame, 20000
+    )
     print "content done:", content_X.shape, content_y.shape
-
-    print "took", time() - start, "sec"
+    print "processing frames..."
 
     X = np.vstack((credits_X, content_X))
     y = np.vstack((credits_y, content_y)).ravel()
+
+    print "took", time() - start, "sec"
 
     model = build_model()
     train_and_dump_model(model, X, y)
 
     print "testing on unseen data..."
-    credits_X, credits_y = get_dataset(["credits/john_wick.mov"], 1)
+    credits_X, credits_y = get_dataset(
+        ["credits/john_wick.mov"], 1,
+        process_frame
+    )
     print "data loaded:", credits_X.shape, credits_y.shape
 
     credits_y = np_utils.to_categorical(credits_y, 2)
