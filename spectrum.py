@@ -16,23 +16,14 @@ def model_selector(modelname=None):
 
         def is_credit(frame):
             frame = train_svm.process_frame(frame)
-
-            if svm.predict([frame]) == [[1]]:
-                return True
-
-            return False
+            return svm.predict([frame]) == [[1]]
     elif modelname == "cnn":
         cnn = train_cnn.build_model()
         cnn.load_weights("credits_detection/models/cnn.h5")
 
         def is_credit(frame):
-            frame = train_cnn.process_frame(frame)
-            frame = frame[np.newaxis, ...]
-
-            if cnn.predict(frame)[0][1] >= 0.9:
-                return True
-
-            return False
+            frame = train_cnn.process_frame(frame)[np.newaxis, ...]
+            return cnn.predict(frame)[0][1] >= 0.9
     else:
         def is_credit(frame):
             return False
