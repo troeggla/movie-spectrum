@@ -12,6 +12,17 @@ from time import time
 from util import get_dataset
 
 
+def setup_model():
+    cnn = build_model()
+    cnn.load_weights("credits_detection/models/cnn.h5")
+
+    def is_credit(frame):
+        frame = process_frame(frame)[np.newaxis, ...]
+        return cnn.predict(frame)[0][1] >= 0.9
+
+    return is_credit
+
+
 def process_frame(frame):
     frame = cv2.resize(frame, (30, 30))
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -71,7 +82,7 @@ def train_and_dump_model(model, X, y):
     )
     print "accuracy: {:.2f}%".format(accuracy * 100)
 
-    print("dumping weights to file...")
+    print "dumping weights to file..."
     model.save_weights("models/cnn.h5", overwrite=True)
 
 
