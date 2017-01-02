@@ -10,6 +10,16 @@ from time import time
 from util import get_dataset
 
 
+def setup_model():
+    svm = load(open("credits_detection/models/svm.p", "r"))
+
+    def is_credit(frame):
+        frame = process_frame(frame)
+        return svm.predict([frame]) == [[1]]
+
+    return is_credit
+
+
 def process_frame(frame):
     frame = cv2.resize(frame, (100, frame.shape[0]))
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
