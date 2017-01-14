@@ -85,14 +85,17 @@ def write_to_files(frame_averages, dimensions, outname="spectrum"):
     )
 
 
-def main(infile, dimensions=(8000, 2000), credit_detector=model_selector()):
+def main(infile, size=(8000, 2000), marker=False, is_credit=model_selector()):
     frames_processed, frames_dropped = 0, 0
     frame_averages = []
 
     for frame in get_frames(infile):
         frames_processed += 1
 
-        if credit_detector(frame):
+        if is_credit(frame):
+            if marker:
+                frame_averages.append(Red)
+
             frames_dropped += 1
         else:
             frame_averages.append(mean_color(frame))
@@ -102,7 +105,7 @@ def main(infile, dimensions=(8000, 2000), credit_detector=model_selector()):
                 frames_processed, frames_dropped
             )
 
-    write_to_files(frame_averages, dimensions)
+    write_to_files(frame_averages, size)
 
     print "\nDONE\n"
     print "Processed %d frames, dropped %d (%.2f%%)" % (
