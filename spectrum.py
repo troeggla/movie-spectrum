@@ -145,6 +145,12 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "-m", "--marker",
+        action="store_true", default=False,
+        help="Render red marker where frames where removed"
+    )
+
+    parser.add_argument(
         "video_file", type=str,
         help="The video file to process"
     )
@@ -153,6 +159,7 @@ if __name__ == "__main__":
 
     main(
         args.video_file,
-        dimensions=args.dimensions,
-        credit_detector=model_selector(args.remove_credits)
+        size=args.dimensions,
+        marker=args.marker,
+        is_credit=model_selector(args.remove_credits)
     )
