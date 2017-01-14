@@ -8,6 +8,7 @@ from math import sin, pi
 from pickle import load
 
 Color = namedtuple("Color", ["blue", "green", "red"])
+Red = Color(red=255, green=0, blue=0)
 
 
 def model_selector(modelname=None):
