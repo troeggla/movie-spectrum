@@ -147,7 +147,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-m", "--marker",
         action="store_true", default=False,
-        help="Render red marker where frames where removed"
+        help="Render red marker where frames were removed"
     )
 
     parser.add_argument(
