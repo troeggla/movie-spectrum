@@ -3,9 +3,7 @@ import numpy as np
 
 from argparse import ArgumentParser
 from collections import namedtuple
-from credits_detection import train_svm, train_cnn
 from math import sin, pi
-from pickle import load
 
 Color = namedtuple("Color", ["blue", "green", "red"])
 Red = Color(red=255, green=0, blue=0)
@@ -13,8 +11,10 @@ Red = Color(red=255, green=0, blue=0)
 
 def model_selector(modelname=None):
     if modelname == "svm":
+        from credits_detection import train_svm
         is_credit = train_svm.setup_model()
     elif modelname == "cnn":
+        from credits_detection import train_cnn
         is_credit = train_cnn.setup_model()
     else:
         def is_credit(_):
