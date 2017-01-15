@@ -3,7 +3,7 @@ import numpy as np
 
 from argparse import ArgumentParser
 from glob import glob
-from pickle import dump
+from pickle import dump, load
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split, cross_val_score, KFold
 from time import time
