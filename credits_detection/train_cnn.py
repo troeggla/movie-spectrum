@@ -72,53 +72,53 @@ def train_and_dump_model(model, X, y):
     y_train = np_utils.to_categorical(y_train, 2)
     y_test = np_utils.to_categorical(y_test, 2)
 
-    print "training model..."
+    print("training model...")
     model.fit(X_train, y_train, batch_size=128, nb_epoch=15, verbose=1)
 
-    print "evaluating..."
+    print("evaluating...")
     loss, accuracy = model.evaluate(
         X_test, y_test,
         batch_size=128, verbose=1
     )
-    print "accuracy: {:.2f}%".format(accuracy * 100)
+    print("accuracy: {:.2f}%".format(accuracy * 100))
 
-    print "dumping weights to file..."
+    print("dumping weights to file...")
     model.save_weights("models/cnn.h5", overwrite=True)
 
 
 def main():
     start = time()
-    print "loading data..."
+    print("loading data...")
 
     credits_X, credits_y = get_dataset(
         ["credits/mad_max.mov", "credits/under_the_skin.mov"], 1,
         process_frame, 20000
     )
-    print "credits done:", credits_X.shape, credits_y.shape
+    print("credits done:", credits_X.shape, credits_y.shape)
 
     content_X, content_y = get_dataset(
         glob("./content/*.mov"), 0,
         process_frame, 20000
     )
-    print "content done:", content_X.shape, content_y.shape
+    print("content done:", content_X.shape, content_y.shape)
 
     X = np.vstack((credits_X, content_X))
     y = np.vstack((credits_y, content_y)).ravel()
 
-    print "took", time() - start, "sec"
+    print("took", time() - start, "sec")
 
     model = build_model()
     train_and_dump_model(model, X, y)
 
-    print "testing on unseen data..."
+    print("testing on unseen data...")
     credits_X, credits_y = get_dataset(
         ["credits/john_wick.mov"], 1,
         process_frame
     )
-    print "data loaded:", credits_X.shape, credits_y.shape
+    print("data loaded:", credits_X.shape, credits_y.shape)
 
     credits_y = np_utils.to_categorical(credits_y, 2)
-    print "score:", model.evaluate(credits_X, credits_y, batch_size=128)
+    print("score:", model.evaluate(credits_X, credits_y, batch_size=128))
 
 
 if __name__ == "__main__":
