@@ -59,7 +59,7 @@ def get_frames(infile):
         if frame is None:
             break
 
-        yield frame
+        yield cv2.resize(frame, (100, 100))
 
     cap.release()
 
