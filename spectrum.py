@@ -74,14 +74,14 @@ def write_to_files(frame_averages, dimensions, outname="spectrum"):
     cv2.imwrite(
         outname + ".png",
         outimg,
-        (cv2.cv.CV_IMWRITE_PNG_COMPRESSION, 9)
+        (cv2.IMWRITE_PNG_COMPRESSION, 9)
     )
 
     with_gradient = gradient(outimg, 0.4)
     cv2.imwrite(
         outname + "_vignette.png",
         with_gradient,
-        (cv2.cv.CV_IMWRITE_PNG_COMPRESSION, 9)
+        (cv2.IMWRITE_PNG_COMPRESSION, 9)
     )
 
 
@@ -101,18 +101,18 @@ def main(infile, size=(8000, 2000), marker=False, is_credit=model_selector()):
             frame_averages.append(mean_color(frame))
 
         if frames_processed % 1000 == 0:
-            print "Processed %d frames (%d dropped)" % (
+            print("Processed %d frames (%d dropped)" % (
                 frames_processed, frames_dropped
-            )
+            ))
 
     write_to_files(frame_averages, size)
 
-    print "\nDONE\n"
-    print "Processed %d frames, dropped %d (%.2f%%)" % (
+    print("\nDONE\n")
+    print("Processed %d frames, dropped %d (%.2f%%)" % (
         frames_processed,
         frames_dropped,
         frames_dropped / float(frames_processed) * 100
-    )
+    ))
 
 
 if __name__ == "__main__":
