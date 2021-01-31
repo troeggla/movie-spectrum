@@ -90,7 +90,10 @@ def write_to_files(frame_averages, dimensions, outname="spectrum"):
     )
 
 
-def main(infile, size=(8000, 2000), marker=False, is_credit=model_selector()):
+def main(
+    infile, size=(8000, 2000), marker=False,
+    algorithm="mean", is_credit=model_selector()
+):
     frames_processed, frames_dropped = 0, 0
     frame_averages = []
 
@@ -103,7 +106,7 @@ def main(infile, size=(8000, 2000), marker=False, is_credit=model_selector()):
 
             frames_dropped += 1
         else:
-            frame_averages.append(mean_color(frame))
+            frame_averages.append(mean_color(frame, algorithm))
 
         if frames_processed % 1000 == 0:
             print("Processed %d frames (%d dropped)" % (
@@ -156,6 +159,12 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "-a", "--algorithm",
+        choices=["mean", "median"], default="mean",
+        help="Algorithm to use for calculating colour value for frame"
+    )
+
+    parser.add_argument(
         "video_file", type=str,
         help="The video file to process"
     )
@@ -166,5 +175,6 @@ if __name__ == "__main__":
         args.video_file,
         size=args.dimensions,
         marker=args.marker,
+        algorithm=args.algorithm,
         is_credit=model_selector(args.remove_credits)
     )
