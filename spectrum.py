@@ -161,7 +161,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-a", "--algorithm",
         choices=["mean", "median"], default="mean",
-        help="Algorithm to use for calculating colour value for frame"
+        help="""Specify the algorithm to use for calculating the colour value
+        for each frame (defaults to 'mean')"""
     )
 
     parser.add_argument(
