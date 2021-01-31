@@ -39,9 +39,14 @@ def gradient(img, length=0.25):
     return output * gradient[..., np.newaxis]
 
 
-def mean_color(frame):
+def mean_color(frame, algorithm="mean"):
     def int_mean(arr):
-        return int(round(np.mean(arr)))
+        if algorithm == "mean":
+            return int(round(np.mean(arr)))
+        elif algorithm == "median":
+            return int(round(np.median(arr)))
+        else:
+            return 0
 
     return Color(
         int_mean(frame[:, :, 0]),
